@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ReachOut — Donors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <div th:replace="fragments/layout :: navbar(activePage='donors')"></div>
+
+  <div class="ro-page">
+    <div class="ro-page-header">
+      <h1>Donor Management</h1>
+      <p>Register donors and the resources they've contributed.</p>
+    </div>
+
+    <div class="ro-alert ro-alert-error" th:if="${error}" th:text="${error}"></div>
+    <div class="ro-alert ro-alert-success" th:if="${message}" th:text="${message}"></div>
+
+    <div class="ro-card">
+      <h2>Add Donor</h2>
+      <form class="ro-form-row" method="post" th:action="@{/donors/add}">
+        <div class="ro-field">
+          <label>Name</label>
+          <input type="text" name="name" required>
+        </div>
+        <div class="ro-field">
+          <label>Type</label>
+          <select name="type">
+            <option th:each="t : ${donorTypes}" th:value="${t}" th:text="${t}"></option>
+          </select>
+        </div>
+        <div class="ro-field">
+          <label>Contact</label>
+          <input type="text" name="contact">
+        </div>
+        <div class="ro-field">
+          <label>Location</label>
+          <input type="text" name="location" required>
+        </div>
+        <button type="submit" class="ro-btn">Add Donor</button>
+      </form>
+    </div>
+
+    <div class="ro-card">
+      <h2>Donors</h2>
+      <div class="ro-table-wrap">
+        <table class="ro-table">
+          <thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Contact</th><th>Location</th></tr></thead>
+          <tbody>
+            <tr th:each="d : ${donors}">
+              <td th:text="${d.donorId}"></td>
+              <td th:text="${d.name}"></td>
+              <td th:text="${d.type}"></td>
+              <td th:text="${d.contact}"></td>
+              <td th:text="${d.location}"></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="ro-empty-state" th:if="${donors == null or #lists.isEmpty(donors)}">No donors registered yet.</p>
+      </div>
+    </div>
+
+    <div class="ro-card">
+      <h2>Add Resource</h2>
+      <form class="ro-form-row" method="post" th:action="@{/resources/add}">
+        <div class="ro-field">
+          <label>Donor</label>
+          <select name="donorId" required>
+            <option th:each="d : ${donors}" th:value="${d.donorId}"
+                    th:text="${d.donorId} + ' — ' + ${d.name}"></option>
+          </select>
+        </div>
+        <div class="ro-field">
+          <label>Item</label>
+          <input type="text" name="itemName" required>
+        </div>
+        <div class="ro-field">
+          <label>Quantity</label>
+          <input type="number" name="quantity" min="1" required>
+        </div>
+        <div class="ro-field">
+          <label>Location</label>
+          <input type="text" name="location" required>
+        </div>
+        <button type="submit" class="ro-btn">Add Resource</button>
+      </form>
+    </div>
+
+    <div class="ro-card">
+      <h2>Resources</h2>
+      <div class="ro-table-wrap">
+        <table class="ro-table">
+          <thead><tr><th>ID</th><th>Donor ID</th><th>Item</th><th>Qty</th><th>Location</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr th:each="r : ${resources}">
+              <td th:text="${r.resourceId}"></td>
+              <td th:text="${r.donorId}"></td>
+              <td th:text="${r.itemName}"></td>
+              <td th:text="${r.quantity}"></td>
+              <td th:text="${r.location}"></td>
+              <td>
+                <span class="ro-badge"
+                      th:classappend="'ro-badge-' + ${#strings.toLowerCase(r.status)}"
+                      th:text="${r.status}"></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="ro-empty-state" th:if="${resources == null or #lists.isEmpty(resources)}">No resources logged yet.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

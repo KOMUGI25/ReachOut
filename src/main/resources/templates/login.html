@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ReachOut — Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <div class="ro-login-shell">
+    <div class="ro-login-card">
+      <div class="ro-logo-dot">R</div>
+      <h1>ReachOut</h1>
+      <p class="ro-sub">Community-Powered Emergency Resource Network</p>
+
+      <div class="ro-alert ro-alert-error" th:if="${error}" th:text="${error}">
+        Invalid username or password.
+      </div>
+
+      <form method="post" th:action="@{/login}">
+        <div class="ro-field">
+          <label>Username</label>
+          <input type="text" name="username" required autofocus>
+        </div>
+        <div class="ro-field">
+          <label>Password</label>
+          <input type="password" name="password" required>
+        </div>
+        <button type="submit" class="ro-btn">Login</button>
+      </form>
+
+      <p class="ro-role-hint">Admin, Donor and Volunteer accounts all sign in here — you're routed to the right view automatically.</p>
+    </div>
+  </div>
+</body>
+</html>

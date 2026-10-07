@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!--
+    Reusable navbar fragment. Included at the top of every page
+    (except login) with th:replace="fragments/layout :: navbar(activePage='donors')"
+  -->
+</head>
+<body>
+  <div th:fragment="navbar(activePage)" class="ro-navbar">
+    <div class="ro-brand">
+      <span class="ro-dot"></span>
+      ReachOut
+    </div>
+    <nav>
+      <a href="/dashboard" th:classappend="${activePage == 'dashboard'} ? 'active'">Dashboard</a>
+      <a href="/donors" th:classappend="${activePage == 'donors'} ? 'active'">Donors</a>
+      <a href="/requests" th:classappend="${activePage == 'requests'} ? 'active'">Requests</a>
+      <a href="/tracking" th:classappend="${activePage == 'tracking'} ? 'active'">Tracking</a>
+    </nav>
+    <div class="ro-user">
+      <span class="ro-role-badge" th:text="${session.role} ?: 'GUEST'">ROLE</span>
+      <span th:text="${session.username}">username</span>
+      <a class="ro-logout" href="/logout">Log out</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ReachOut — Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <div th:replace="fragments/layout :: navbar(activePage='dashboard')"></div>
+
+  <div class="ro-page">
+    <div class="ro-page-header">
+      <h1>Dashboard</h1>
+      <p>A quick snapshot of donors, resources and requests right now.</p>
+    </div>
+
+    <div class="ro-alert ro-alert-error" th:if="${error}" th:text="${error}"></div>
+
+    <div class="ro-tiles">
+      <div class="ro-tile">
+        <div class="ro-tile-label">Total Donors</div>
+        <div class="ro-tile-value" th:text="${donorCount}">0</div>
+      </div>
+      <div class="ro-tile">
+        <div class="ro-tile-label">Available Resources</div>
+        <div class="ro-tile-value" th:text="${availableResources}">0</div>
+      </div>
+      <div class="ro-tile">
+        <div class="ro-tile-label">Pending Requests</div>
+        <div class="ro-tile-value" th:text="${pendingRequests}">0</div>
+      </div>
+      <div class="ro-tile">
+        <div class="ro-tile-label">Delivered</div>
+        <div class="ro-tile-value" th:text="${delivered}">0</div>
+      </div>
+    </div>
+
+    <div class="ro-card">
+      <h2>Quick Links</h2>
+      <p style="margin:0 0 14px;color:var(--ro-gray-500);font-size:14px;">Jump straight to a module:</p>
+      <a class="ro-btn ro-btn-secondary" href="/donors" style="margin-right:10px;">Manage Donors</a>
+      <a class="ro-btn ro-btn-secondary" href="/requests" style="margin-right:10px;">Raise / View Requests</a>
+      <a class="ro-btn ro-btn-secondary" href="/tracking">Track Deliveries</a>
+    </div>
+
+    <div class="ro-card">
+      <h2>Recent Requests</h2>
+      <div class="ro-table-wrap">
+        <table class="ro-table">
+          <thead>
+            <tr><th>ID</th><th>Requester</th><th>Item</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr th:each="r : ${recentRequests}">
+              <td th:text="${r.requestId}"></td>
+              <td th:text="${r.requesterName}"></td>
+              <td th:text="${r.itemNeeded}"></td>
+              <td>
+                <span class="ro-badge"
+                      th:classappend="'ro-badge-' + ${#strings.toLowerCase(#strings.replace(r.status,'_',''))}"
+                      th:text="${r.status}"></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="ro-empty-state" th:if="${recentRequests == null or #lists.isEmpty(recentRequests)}">No requests raised yet.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

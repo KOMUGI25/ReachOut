@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>ReachOut — Requests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <div th:replace="fragments/layout :: navbar(activePage='requests')"></div>
+
+  <div class="ro-page">
+    <div class="ro-page-header">
+      <h1>Emergency Requests</h1>
+      <p>Raise a request — it's matched to an available resource and volunteer automatically.</p>
+    </div>
+
+    <div class="ro-alert ro-alert-error" th:if="${error}" th:text="${error}"></div>
+    <div class="ro-alert ro-alert-success" th:if="${message}" th:text="${message}"></div>
+
+    <div class="ro-card">
+      <h2>Raise a Request</h2>
+      <form class="ro-form-row" method="post" th:action="@{/requests/add}">
+        <div class="ro-field">
+          <label>Requester</label>
+          <input type="text" name="requesterName" required>
+        </div>
+        <div class="ro-field">
+          <label>Item Needed</label>
+          <input type="text" name="itemNeeded" required>
+        </div>
+        <div class="ro-field">
+          <label>Location</label>
+          <input type="text" name="location" required>
+        </div>
+        <button type="submit" class="ro-btn">Raise &amp; Match</button>
+      </form>
+    </div>
+
+    <div class="ro-card">
+      <h2>All Requests</h2>
+      <div class="ro-table-wrap">
+        <table class="ro-table">
+          <thead>
+            <tr><th>ID</th><th>Requester</th><th>Item</th><th>Location</th><th>Status</th><th>Matched Resource</th><th>Assigned Volunteer</th></tr>
+          </thead>
+          <tbody>
+            <tr th:each="r : ${requests}">
+              <td th:text="${r.requestId}"></td>
+              <td th:text="${r.requesterName}"></td>
+              <td th:text="${r.itemNeeded}"></td>
+              <td th:text="${r.location}"></td>
+              <td>
+                <span class="ro-badge"
+                      th:classappend="'ro-badge-' + ${#strings.toLowerCase(#strings.replace(r.status,'_',''))}"
+                      th:text="${r.status}"></span>
+              </td>
+              <td th:text="${r.matchedResourceId} ?: '-'"></td>
+              <td th:text="${r.assignedVolunteerId} ?: '-'"></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="ro-empty-state" th:if="${requests == null or #lists.isEmpty(requests)}">No requests raised yet.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
